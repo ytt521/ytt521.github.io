@@ -4,6 +4,44 @@
   
     
     <entry>
+      <title>mybatis-plus代码生成器</title>
+      <link href="/post/e4910c72.html"/>
+      <url>/post/e4910c72.html</url>
+      
+        <content type="html"><![CDATA[<p>记录一下代码生成器，方便日后CV</p><h4 id="导入相关依赖"><a href="#导入相关依赖" class="headerlink" title="导入相关依赖"></a>导入相关依赖</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 数据库驱动 --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;mysql&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;<span class="number">8.0</span><span class="number">.25</span>&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">  </span><br><span class="line">&lt;!-- lombok --&gt;  </span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;lombok&lt;/artifactId&gt;</span><br><span class="line">    &lt;optional&gt;<span class="literal">true</span>&lt;/optional&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- mybatis-plus --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.baomidou&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;mybatis-plus-boot-starter&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;<span class="number">3.0</span><span class="number">.5</span>&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- 代码自动生成器依赖--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.baomidou&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;mybatis-plus-generator&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;<span class="number">3.0</span><span class="number">.5</span>&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;!-- 代码自动生成器模板依赖--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.velocity&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;velocity-engine-core&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;<span class="number">2.2</span>&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure><h4 id="代码生成器"><a href="#代码生成器" class="headerlink" title="代码生成器"></a>代码生成器</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CodeGenerator</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">scanner</span><span class="params">(String tip)</span> &#123;</span><br><span class="line">        <span class="type">Scanner</span> <span class="variable">scanner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">help</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        help.append(<span class="string">&quot;请输入数据库表名&quot;</span> + tip + <span class="string">&quot;：&quot;</span>);</span><br><span class="line">        System.out.println(help.toString());</span><br><span class="line">        <span class="keyword">if</span> (scanner.hasNext()) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">ipt</span> <span class="operator">=</span> scanner.next();</span><br><span class="line">            <span class="keyword">if</span> (StringUtils.isNotBlank(ipt)) &#123;</span><br><span class="line">                <span class="keyword">return</span> ipt;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">MybatisPlusException</span>(<span class="string">&quot;请输入正确的数据格式或表名&quot;</span> + tip + <span class="string">&quot;！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 代码生成器</span></span><br><span class="line">        <span class="type">AutoGenerator</span> <span class="variable">mpg</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AutoGenerator</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 全局配置</span></span><br><span class="line">        <span class="type">GlobalConfig</span> <span class="variable">gc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GlobalConfig</span>();</span><br><span class="line">        <span class="type">String</span> <span class="variable">projectPath</span> <span class="operator">=</span> System.getProperty(<span class="string">&quot;user.dir&quot;</span>);</span><br><span class="line">        gc.setOutputDir(projectPath + <span class="string">&quot;/demo/src/main/java&quot;</span>);<span class="comment">//设置代码生成路径</span></span><br><span class="line">        gc.setFileOverride(<span class="literal">true</span>);<span class="comment">//是否覆盖以前文件</span></span><br><span class="line">        gc.setOpen(<span class="literal">false</span>);<span class="comment">//是否打开生成目录</span></span><br><span class="line">        gc.setAuthor(<span class="string">&quot;LIFEILIN&quot;</span>);<span class="comment">//设置项目作者名称</span></span><br><span class="line">        gc.setIdType(IdType.AUTO);<span class="comment">//设置主键策略</span></span><br><span class="line">        gc.setBaseResultMap(<span class="literal">true</span>);<span class="comment">//生成基本ResultMap</span></span><br><span class="line">        gc.setBaseColumnList(<span class="literal">true</span>);<span class="comment">//生成基本ColumnList</span></span><br><span class="line">        gc.setServiceName(<span class="string">&quot;%sService&quot;</span>);<span class="comment">//去掉服务默认前缀</span></span><br><span class="line">        gc.setDateType(DateType.ONLY_DATE);<span class="comment">//设置时间类型</span></span><br><span class="line">        mpg.setGlobalConfig(gc);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 数据源配置</span></span><br><span class="line">        <span class="type">DataSourceConfig</span> <span class="variable">dsc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DataSourceConfig</span>();</span><br><span class="line">        dsc.setUrl(<span class="string">&quot;jdbc:mysql://localhost:3306/【数据库名称】?useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=GMT%2B8&quot;</span>);</span><br><span class="line">        dsc.setDriverName(<span class="string">&quot;com.mysql.cj.jdbc.Driver&quot;</span>);</span><br><span class="line">        dsc.setUsername(<span class="string">&quot;root&quot;</span>);</span><br><span class="line">        dsc.setPassword(<span class="string">&quot;【密码】&quot;</span>);</span><br><span class="line">        mpg.setDataSource(dsc);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 包配置</span></span><br><span class="line">        <span class="type">PackageConfig</span> <span class="variable">pc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PackageConfig</span>();</span><br><span class="line">        pc.setParent(<span class="string">&quot;com.xiaoying&quot;</span>);</span><br><span class="line">        pc.setMapper(<span class="string">&quot;mapper&quot;</span>);</span><br><span class="line">        pc.setXml(<span class="string">&quot;mapper.xml&quot;</span>);</span><br><span class="line">        pc.setEntity(<span class="string">&quot;entity&quot;</span>);</span><br><span class="line">        pc.setService(<span class="string">&quot;service&quot;</span>);</span><br><span class="line">        pc.setServiceImpl(<span class="string">&quot;service.impl&quot;</span>);</span><br><span class="line">        pc.setController(<span class="string">&quot;controller&quot;</span>);</span><br><span class="line">        mpg.setPackageInfo(pc);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 策略配置</span></span><br><span class="line">        <span class="type">StrategyConfig</span> <span class="variable">sc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StrategyConfig</span>();</span><br><span class="line">        <span class="comment">//数据库表映射到实体的命名策略:默命名:NamingStrategy.underline_to_camel认下划线转驼峰</span></span><br><span class="line">        sc.setNaming(NamingStrategy.underline_to_camel);</span><br><span class="line">        <span class="comment">//数据库表字段映射到实体的命名策略:默认下划线转驼峰命名:NamingStrategy.underline_to_camel</span></span><br><span class="line">        sc.setColumnNaming(NamingStrategy.underline_to_camel);</span><br><span class="line">        sc.setEntityLombokModel(<span class="literal">true</span>);<span class="comment">//自动lombok</span></span><br><span class="line">        sc.setRestControllerStyle(<span class="literal">true</span>);</span><br><span class="line">        sc.setControllerMappingHyphenStyle(<span class="literal">true</span>);</span><br><span class="line"><span class="comment">//自己需要去配置文件配置逻辑删除等</span></span><br><span class="line">        sc.setLogicDeleteFieldName(<span class="string">&quot;deleted&quot;</span>);<span class="comment">//设置逻辑删除</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//设置自动填充配置</span></span><br><span class="line">        <span class="type">TableFill</span> <span class="variable">gmt_create</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TableFill</span>(<span class="string">&quot;create_time&quot;</span>, FieldFill.INSERT);</span><br><span class="line">        <span class="type">TableFill</span> <span class="variable">gmt_modified</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TableFill</span>(<span class="string">&quot;update_time&quot;</span>, FieldFill.INSERT_UPDATE);</span><br><span class="line">        ArrayList&lt;TableFill&gt; tableFills=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        tableFills.add(gmt_create);</span><br><span class="line">        tableFills.add(gmt_modified);</span><br><span class="line">        sc.setTableFillList(tableFills);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//乐观锁</span></span><br><span class="line">        sc.setVersionFieldName(<span class="string">&quot;version&quot;</span>);</span><br><span class="line">        sc.setRestControllerStyle(<span class="literal">true</span>);<span class="comment">//驼峰命名</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//  sc.setTablePrefix(&quot;tbl_&quot;); 设置表名前缀</span></span><br><span class="line">        sc.setInclude(scanner(<span class="string">&quot;表名，多个英文逗号分割&quot;</span>).split(<span class="string">&quot;,&quot;</span>));</span><br><span class="line">        mpg.setStrategy(sc);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 生成代码</span></span><br><span class="line">        mpg.execute();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> mybatis </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> mybatis </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>mybatis源码系列</title>
+      <link href="/post/8bb03f7e.html"/>
+      <url>/post/8bb03f7e.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>SaToken使用</title>
       <link href="/post/3ce22303.html"/>
       <url>/post/3ce22303.html</url>
@@ -1901,17 +1939,6 @@
     
     
     <entry>
-      <title>友链</title>
-      <link href="/link/index.html"/>
-      <url>/link/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title></title>
       <link href="/js/light.js"/>
       <url>/js/light.js</url>
@@ -1934,17 +1961,6 @@
     
     
     <entry>
-      <title>tags</title>
-      <link href="/tags/index.html"/>
-      <url>/tags/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>电影</title>
       <link href="/movies/index.html"/>
       <url>/movies/index.html</url>
@@ -1956,9 +1972,31 @@
     
     
     <entry>
+      <title>友链</title>
+      <link href="/link/index.html"/>
+      <url>/link/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>音乐</title>
       <link href="/music/index.html"/>
       <url>/music/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>tags</title>
+      <link href="/tags/index.html"/>
+      <url>/tags/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
