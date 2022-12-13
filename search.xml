@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>SaToken使用</title>
+      <link href="/post/3ce22303.html"/>
+      <url>/post/3ce22303.html</url>
+      
+        <content type="html"><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>我们在日常的开发过程中，经常会遇到需要做登录认证、授权等操作，我们第一想到的可能是<code>shiro</code>或者<code>spring security</code>,但是用过的小伙伴们应该都知道，这两个框架配置起来十分的繁琐，那有没有简化的框架呢？答案是肯定的，引出我们今天的主角—<font color="orange">SaToken</font></p><p>先来贴一下官网：<a href="https://sa-token.dev33.cn/">https://sa-token.dev33.cn/</a></p><p>其实官网的例子已经很详细了，这里就偷个懒不进行详细讲解了，但是可以留下一个设计方案</p><p><img src="https://edu-ws.oss-cn-beijing.aliyuncs.com/blog/202212132340774.png" alt="image-20221213234020698"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 拓展 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 拓展 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>异常传递</title>
       <link href="/post/ec92ab16.html"/>
       <url>/post/ec92ab16.html</url>
@@ -1876,6 +1901,17 @@
     
     
     <entry>
+      <title>友链</title>
+      <link href="/link/index.html"/>
+      <url>/link/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title></title>
       <link href="/js/light.js"/>
       <url>/js/light.js</url>
@@ -1898,6 +1934,17 @@
     
     
     <entry>
+      <title>tags</title>
+      <link href="/tags/index.html"/>
+      <url>/tags/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>电影</title>
       <link href="/movies/index.html"/>
       <url>/movies/index.html</url>
@@ -1909,31 +1956,9 @@
     
     
     <entry>
-      <title>友链</title>
-      <link href="/link/index.html"/>
-      <url>/link/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>音乐</title>
       <link href="/music/index.html"/>
       <url>/music/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>tags</title>
-      <link href="/tags/index.html"/>
-      <url>/tags/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
