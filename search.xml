@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>Unsafe获取</title>
+      <link href="/post/3af976ce.html"/>
+      <url>/post/3af976ce.html</url>
+      
+        <content type="html"><![CDATA[<p>无用的小知识—&gt;<code>Unsafe</code>的获取</p><h3 id="错误方式"><a href="#错误方式" class="headerlink" title="错误方式"></a>错误方式</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestUnsafe</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Unsafe unsafe=Unsafe.getUnsafe();</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(unsafe);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><img src="https://edu-ws.oss-cn-beijing.aliyuncs.com/blog/202212142219817.png" alt="image-20221214221924735"></p><h3 id="正确姿势"><a href="#正确姿势" class="headerlink" title="正确姿势"></a>正确姿势</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestUnsafe</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Unsafe unsafe;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Class&lt;Unsafe&gt; unsafeClass = Unsafe.class;</span><br><span class="line">            <span class="type">Field</span> <span class="variable">theUnsafe</span> <span class="operator">=</span> unsafeClass.getDeclaredField(<span class="string">&quot;theUnsafe&quot;</span>);</span><br><span class="line">            theUnsafe.setAccessible(<span class="literal">true</span>);</span><br><span class="line">            unsafe= (Unsafe) theUnsafe.get(<span class="literal">null</span>);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(unsafe);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><img src="https://edu-ws.oss-cn-beijing.aliyuncs.com/blog/202212142241068.png" alt="image-20221214224123014"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 拓展 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 拓展 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>mybatis-plus代码生成器</title>
       <link href="/post/e4910c72.html"/>
       <url>/post/e4910c72.html</url>
