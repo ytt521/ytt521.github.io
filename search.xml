@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>Netty学习</title>
+      <link href="/post/cfd68dd0.html"/>
+      <url>/post/cfd68dd0.html</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-NIO基础"><a href="#1-NIO基础" class="headerlink" title="1.NIO基础"></a>1.NIO基础</h2><h3 id="1-三大组件"><a href="#1-三大组件" class="headerlink" title="1.三大组件"></a>1.三大组件</h3><ol><li><p>channel和Buffer</p><p><code>channel</code>是读写数据的<font color="orange">双向通道</font>,可以从channel将数据读入<code>buffer</code>,也可以将buffer中的数据写入到channel中</p><p>常见的Channel有：</p><ul><li>FileChannel</li><li>DatagramChannel</li><li>SocketChannel</li><li>ServerSocketChannel</li></ul><p><code>Buffer</code>则用来缓冲读写数据，常见的Buffer有：</p><ul><li>ByteBuffer<ul><li>MappedByteBuffer</li><li>DirectByteBuffer</li><li>HeapByteBuffer</li></ul></li><li>shortBuffer</li><li>IntBuffer</li><li>LongBuffer</li><li>FloatBuffer</li><li>DoubleBuffer</li><li>CharBuffer</li></ul></li><li><p>Selector</p><p><strong>多线程设计版</strong>：</p><p><img src="https://edu-ws.oss-cn-beijing.aliyuncs.com/blog/202301082322895.png" alt="image-20230108232254861"></p><p>缺点：</p><ul><li>内存占用高</li><li>线程上线文切换成本高</li><li>只适合连接数较少的场景</li></ul><p><strong>线程池设计版</strong>：</p><p><img src="https://edu-ws.oss-cn-beijing.aliyuncs.com/blog/202301082326598.png" alt="image-20230108232632548"></p><p>缺点：</p><ul><li>阻塞模式下，线程池仅能处理一个socket连接</li><li>仅适合短连接场景</li></ul><p><strong>Selector版设计：</strong></p><p><code>selector</code>的作用是配合一个线程来<font color="orange">管理多个channel</font>，获取这些channel上发生的事件，这些channel工作在<code>非阻塞模式</code>下，不会让线程阻塞在一个channel上。适合连接数特别多，但流量低的场景</p><p><img src="https://edu-ws.oss-cn-beijing.aliyuncs.com/blog/202301082333289.png" alt="image-20230108233345217"></p></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Netty </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Netty </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>git小技巧</title>
       <link href="/post/b120bc47.html"/>
       <url>/post/b120bc47.html</url>
