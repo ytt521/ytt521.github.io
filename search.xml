@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>lambda表达式的类型推断问题</title>
+      <link href="/post/2999cc61.html"/>
+      <url>/post/2999cc61.html</url>
+      
+        <content type="html"><![CDATA[<p>今天在学习阿超的<code>Stream-query</code>时，发现了一个让我比较费解的写法，上网查了好久的资料才弄清楚原因，所以来记录一下。</p><p>代码是这样的：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Enumeration&lt;URL&gt; resources = ((SerSupp&lt;Enumeration&lt;URL&gt;&gt;) () -&gt;</span><br><span class="line">                ClassLoader.getSystemClassLoader().getResources(packageName.replace(<span class="string">&quot;.&quot;</span>, <span class="string">&quot;/&quot;</span>))</span><br><span class="line">        ).get();</span><br></pre></td></tr></table></figure><p>首先，说明一下，这里的<code>SerSupp</code>是对<code>Supplier</code>的拓展，主要是为了实现序列化，同时也处理了<code>getResources</code>方法产生的异常。</p><p>这个 lambda 表达式指定了一个泛型接口类型 <code>SerSupp&lt;Enumeration&lt;URL&gt;&gt;</code>，这是因为这个 lambda 表达式所代表的函数需要返回一个 <code>Enumeration&lt;URL&gt;</code> 类型的结果，而且这个类型必须是可序列化的（即实现了 <code>Serializable</code> 接口），所以这里才需要对<code>Supplier</code>进行拓展。</p><p>其实到这里，我还没有太多的疑惑，最大的疑惑其实是为什么这里的lambda表达式前面有个强制类型转换，于是我查询了一些资料：</p><p>有些 lambda 表达式不需要显示的强制类型转换，是因为它们的上下文已经明确了函数式接口的类型。如果 lambda 表达式的类型可以根据上下文推断出来，则不需要进行显式的类型转换。</p><p>例如，如果要将一个 lambda 表达式赋值给一个类型为 <code>Supplier&lt;Enumeration&lt;URL&gt;&gt;</code> 的变量，编译器可以根据 <code>Supplier</code> 接口的类型参数推断出 lambda 表达式的类型，即 <code>( ) -&gt; ClassLoader.getSystemClassLoader().getResources(packageName.replace(&quot;.&quot;, &quot;/&quot;))</code>。在这种情况下，我们不需要显式地将 lambda 表达式转换为 <code>SerSupp&lt;Enumeration&lt;URL&gt;&gt;</code> 类型，因为编译器已经知道 lambda 表达式的返回类型是 <code>Enumeration&lt;URL&gt;</code>，并且可以推断出 <code>Supplier</code> 接口的类型参数。</p><p>在前面的例子中，lambda 表达式被赋值给一个类型为 <code>Enumeration&lt;URL&gt;</code> 的变量，而不是函数式接口类型的变量。因此，编译器无法根据上下文推断出 lambda 表达式的类型，而需要显式地将 lambda 表达式转换为一个函数式接口类型。</p><hr><p>补充姿势：</p><p><code>Enumeration</code> 是 Java 中的一个接口，它用于遍历集合或枚举类型的元素。<code>Enumeration</code> 接口定义了两个方法：</p><ul><li><code>hasMoreElements()</code>：检测集合中是否还有更多的元素。</li><li><code>nextElement()</code>：返回集合中的下一个元素。</li></ul><p><code>Enumeration</code> 接口已经被标记为过时（Deprecated），并且不推荐在新代码中使用。相反，我们可以使用 <code>Iterator</code> 接口或者 Java 5 引入的增强型 for 循环来遍历集合或枚举类型的元素。</p><p>在实际应用中，我们可以通过 <code>Enumeration&lt;URL&gt;</code> 类型的对象来遍历某个包下的所有资源文件或类文件。例如，我们可以使用 <code>ClassLoader</code> 类的 <code>getResources()</code> 方法获取某个包下所有的资源文件或类文件的 URL，然后通过 <code>Enumeration&lt;URL&gt;</code> 类型的对象来遍历这些 URL，以便我们对这些资源文件或类文件进行进一步的处理。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> stream-query </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> stream-query </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Maven</title>
       <link href="/post/7273cdc.html"/>
       <url>/post/7273cdc.html</url>
@@ -2440,11 +2465,11 @@
     
     
     <entry>
-      <title>友链</title>
-      <link href="/link/index.html"/>
-      <url>/link/index.html</url>
+      <title></title>
+      <link href="/js/cursor.js"/>
+      <url>/js/cursor.js</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[var CURSOR;Math.lerp = (a, b, n) => (1 - n) * a + n * b;const getStyle = (el, attr) => {  try {    return window.getComputedStyle      ? window.getComputedStyle(el)[attr]      : el.currentStyle[attr];  } catch (e) {}  return "";};class Cursor {  constructor() {    this.pos = { curr: null, prev: null };    this.pt = [];    this.create();    this.init();    this.render();  }  move(left, top) {    this.cursor.style["left"] = `${left}px`;    this.cursor.style["top"] = `${top}px`;  }  create() {    if (!this.cursor) {      this.cursor = document.createElement("div");      this.cursor.id = "cursor";      this.cursor.classList.add("hidden");      document.body.append(this.cursor);    }    var el = document.getElementsByTagName("*");    for (let i = 0; i < el.length; i++)      if (getStyle(el[i], "cursor") == "pointer") this.pt.push(el[i].outerHTML);    document.body.appendChild((this.scr = document.createElement("style")));    // 这里改变鼠标指针的颜色 由svg生成    this.scr.innerHTML = `* {cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' width='8px' height='8px'><circle cx='4' cy='4' r='4' opacity='1.0' fill='rgb(57,197,187)'/></svg>") 4 4, auto}`;  }  refresh() {    this.scr.remove();    this.cursor.classList.remove("hover");    this.cursor.classList.remove("active");    this.pos = { curr: null, prev: null };    this.pt = [];    this.create();    this.init();    this.render();  }  init() {    document.onmouseover = (e) =>      this.pt.includes(e.target.outerHTML) &&      this.cursor.classList.add("hover");    document.onmouseout = (e) =>      this.pt.includes(e.target.outerHTML) &&      this.cursor.classList.remove("hover");    document.onmousemove = (e) => {      this.pos.curr == null && this.move(e.clientX - 8, e.clientY - 8);      this.pos.curr = { x: e.clientX - 8, y: e.clientY - 8 };      this.cursor.classList.remove("hidden");    };    document.onmouseenter = (e) => this.cursor.classList.remove("hidden");    document.onmouseleave = (e) => this.cursor.classList.add("hidden");    document.onmousedown = (e) => this.cursor.classList.add("active");    document.onmouseup = (e) => this.cursor.classList.remove("active");  }  render() {    if (this.pos.prev) {      this.pos.prev.x = Math.lerp(this.pos.prev.x, this.pos.curr.x, 0.15);      this.pos.prev.y = Math.lerp(this.pos.prev.y, this.pos.curr.y, 0.15);      this.move(this.pos.prev.x, this.pos.prev.y);    } else {      this.pos.prev = this.pos.curr;    }    requestAnimationFrame(() => this.render());  }}(() => {  CURSOR = new Cursor();  // 需要重新获取列表时，使用 CURSOR.refresh()})();]]></content>
       
     </entry>
     
@@ -2456,6 +2481,17 @@
       <url>/js/light.js</url>
       
         <content type="html"><![CDATA[// 霓虹灯效果// 颜色数组var arr = [  "#39c5bb",  "#f14747",  "#f1a247",  "#f1ee47",  "#b347f1",  "#1edbff",  "#ed709b",  "#5636ed",];// 颜色索引var idx = 0;// 切换颜色function changeColor() {  // 仅夜间模式才启用  if (    document.getElementsByTagName("html")[0].getAttribute("data-theme") ==    "dark"  ) {    if (document.getElementById("site-name"))      document.getElementById("site-name").style.textShadow =        arr[idx] + " 0 0 15px";    if (document.getElementById("site-title"))      document.getElementById("site-title").style.textShadow =        arr[idx] + " 0 0 15px";    if (document.getElementById("site-subtitle"))      document.getElementById("site-subtitle").style.textShadow =        arr[idx] + " 0 0 10px";    if (document.getElementById("post-info"))      document.getElementById("post-info").style.textShadow =        arr[idx] + " 0 0 5px";    try {      document.getElementsByClassName("author-info__name")[0].style.textShadow =        arr[idx] + " 0 0 12px";      document.getElementsByClassName(        "author-info__description"      )[0].style.textShadow = arr[idx] + " 0 0 12px";    } catch {}    idx++;    if (idx == 8) {      idx = 0;    }  } else {    // 白天模式恢复默认    if (document.getElementById("site-name"))      document.getElementById("site-name").style.textShadow =        "#1e1e1ee0 1px 1px 1px";    if (document.getElementById("site-title"))      document.getElementById("site-title").style.textShadow =        "#1e1e1ee0 1px 1px 1px";    if (document.getElementById("site-subtitle"))      document.getElementById("site-subtitle").style.textShadow =        "#1e1e1ee0 1px 1px 1px";    if (document.getElementById("post-info"))      document.getElementById("post-info").style.textShadow =        "#1e1e1ee0 1px 1px 1px";    try {      document.getElementsByClassName("author-info__name")[0].style.textShadow =        "";      document.getElementsByClassName(        "author-info__description"      )[0].style.textShadow = "";    } catch {}  }}// 开启计时器window.onload = setInterval(changeColor, 1200);]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>友链</title>
+      <link href="/link/index.html"/>
+      <url>/link/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
       
     </entry>
     
@@ -2500,17 +2536,6 @@
       <url>/tags/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title></title>
-      <link href="/js/cursor.js"/>
-      <url>/js/cursor.js</url>
-      
-        <content type="html"><![CDATA[var CURSOR;Math.lerp = (a, b, n) => (1 - n) * a + n * b;const getStyle = (el, attr) => {  try {    return window.getComputedStyle      ? window.getComputedStyle(el)[attr]      : el.currentStyle[attr];  } catch (e) {}  return "";};class Cursor {  constructor() {    this.pos = { curr: null, prev: null };    this.pt = [];    this.create();    this.init();    this.render();  }  move(left, top) {    this.cursor.style["left"] = `${left}px`;    this.cursor.style["top"] = `${top}px`;  }  create() {    if (!this.cursor) {      this.cursor = document.createElement("div");      this.cursor.id = "cursor";      this.cursor.classList.add("hidden");      document.body.append(this.cursor);    }    var el = document.getElementsByTagName("*");    for (let i = 0; i < el.length; i++)      if (getStyle(el[i], "cursor") == "pointer") this.pt.push(el[i].outerHTML);    document.body.appendChild((this.scr = document.createElement("style")));    // 这里改变鼠标指针的颜色 由svg生成    this.scr.innerHTML = `* {cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' width='8px' height='8px'><circle cx='4' cy='4' r='4' opacity='1.0' fill='rgb(57,197,187)'/></svg>") 4 4, auto}`;  }  refresh() {    this.scr.remove();    this.cursor.classList.remove("hover");    this.cursor.classList.remove("active");    this.pos = { curr: null, prev: null };    this.pt = [];    this.create();    this.init();    this.render();  }  init() {    document.onmouseover = (e) =>      this.pt.includes(e.target.outerHTML) &&      this.cursor.classList.add("hover");    document.onmouseout = (e) =>      this.pt.includes(e.target.outerHTML) &&      this.cursor.classList.remove("hover");    document.onmousemove = (e) => {      this.pos.curr == null && this.move(e.clientX - 8, e.clientY - 8);      this.pos.curr = { x: e.clientX - 8, y: e.clientY - 8 };      this.cursor.classList.remove("hidden");    };    document.onmouseenter = (e) => this.cursor.classList.remove("hidden");    document.onmouseleave = (e) => this.cursor.classList.add("hidden");    document.onmousedown = (e) => this.cursor.classList.add("active");    document.onmouseup = (e) => this.cursor.classList.remove("active");  }  render() {    if (this.pos.prev) {      this.pos.prev.x = Math.lerp(this.pos.prev.x, this.pos.curr.x, 0.15);      this.pos.prev.y = Math.lerp(this.pos.prev.y, this.pos.curr.y, 0.15);      this.move(this.pos.prev.x, this.pos.prev.y);    } else {      this.pos.prev = this.pos.curr;    }    requestAnimationFrame(() => this.render());  }}(() => {  CURSOR = new Cursor();  // 需要重新获取列表时，使用 CURSOR.refresh()})();]]></content>
       
     </entry>
     
