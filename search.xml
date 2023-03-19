@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>SafeVarargs注解</title>
+      <link href="/post/62341cd6.html"/>
+      <url>/post/62341cd6.html</url>
+      
+        <content type="html"><![CDATA[<p>今天看框架的源码时，发现了这样的一个注解—<code>@SafeVarargs</code>,说实话，这个注解我今天第一次见到，于是抱着学习的态度，去查了一下这个注解的作用：</p><p><code>@SafeVarargs</code> 是一个注解，用于标记一个方法或构造函数，表示该方法或构造函数使用了可变参数，并且不会对参数进行参数化类型不安全的操作，以确保不会引发运行时异常。</p><p>在 Java 泛型中，可变参数使用泛型可变参数（varargs）来实现，这使得我们可以定义参数数量可变的方法，而不必为每种参数数量都编写一个单独的方法。但是，在使用泛型可变参数时，如果不小心使用了参数化类型不安全的操作，就可能导致程序运行时出现异常。</p><p><code>@SafeVarargs</code> 注解的作用是告诉编译器，该方法或构造函数使用了可变参数，并且不会对参数进行参数化类型不安全的操作，从而避免运行时异常。使用 <code>@SafeVarargs</code> 注解可以消除编译器的警告信息，并提高代码的可读性和可维护性。</p><p>需要注意的是，<code>@SafeVarargs</code> 注解只适用于 final 和 static 方法或构造函数。非 final 和 static 的方法或构造函数不适用该注解，因为这些方法或构造函数可能会被子类重载，从而可能导致参数化类型不安全的操作。</p><p>关于参数类型不安全的操作是指：</p><ol><li>在使用泛型方法时，传递了错误的类型参数。</li><li>在使用泛型类时，将错误的类型参数传递给泛型类型。</li><li>在使用可变参数时，将错误的类型参数传递给可变参数。</li><li>在使用原始类型时，将原始类型转换为泛型类型。</li></ol><p>例如：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 在使用泛型方法时，传递了错误的类型参数</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="keyword">void</span> <span class="title function_">printList</span><span class="params">(List&lt;T&gt; list)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (T elem : list) &#123;</span><br><span class="line">        System.out.println(elem.toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">List&lt;Integer&gt; intList = Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line"><span class="type">List</span> <span class="variable">rawList</span> <span class="operator">=</span> intList;</span><br><span class="line">printList(rawList); <span class="comment">// 编译器不会检查类型错误，但实际上会抛出 ClassCastException 异常</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 在使用泛型类时，将错误的类型参数传递给泛型类型</span></span><br><span class="line"><span class="type">List</span> <span class="variable">rawList</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;(); <span class="comment">// 编译器会警告，但允许通过</span></span><br><span class="line">rawList.add(<span class="number">1</span>); <span class="comment">// 编译器不会检查类型错误，但实际上会抛出 ClassCastException 异常</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 在使用可变参数时，将错误的类型参数传递给可变参数</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="keyword">void</span> <span class="title function_">printArgs</span><span class="params">(T... args)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (T arg : args) &#123;</span><br><span class="line">        System.out.println(arg.toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Integer[] ints = <span class="keyword">new</span> <span class="title class_">Integer</span>[]&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line">printArgs(ints); <span class="comment">// 编译器不会检查类型错误，但实际上会抛出 ArrayStoreException 异常</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. 在使用原始类型时，将原始类型转换为泛型类型</span></span><br><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;String&gt;();</span><br><span class="line"><span class="type">List</span> <span class="variable">rawList</span> <span class="operator">=</span> list; <span class="comment">// 编译器会警告，但允许通过</span></span><br><span class="line">List&lt;Integer&gt; intList = (List&lt;Integer&gt;) rawList; <span class="comment">// 编译器不会检查类型错误，但实际上会抛出 ClassCastException 异常</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 拓展 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 拓展 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>lambda表达式的类型推断问题</title>
       <link href="/post/2999cc61.html"/>
       <url>/post/2999cc61.html</url>
@@ -2432,22 +2457,22 @@
     
     
     <entry>
-      <title>关于</title>
-      <link href="/about/index.html"/>
-      <url>/about/index.html</url>
+      <title>categories</title>
+      <link href="/categories/index.html"/>
+      <url>/categories/index.html</url>
       
-        <content type="html"><![CDATA[<div id="gitZone"></div>]]></content>
+        <content type="html"><![CDATA[]]></content>
       
     </entry>
     
     
     
     <entry>
-      <title>categories</title>
-      <link href="/categories/index.html"/>
-      <url>/categories/index.html</url>
+      <title>关于</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<div id="gitZone"></div>]]></content>
       
     </entry>
     
@@ -2466,17 +2491,6 @@
     
     <entry>
       <title></title>
-      <link href="/js/cursor.js"/>
-      <url>/js/cursor.js</url>
-      
-        <content type="html"><![CDATA[var CURSOR;Math.lerp = (a, b, n) => (1 - n) * a + n * b;const getStyle = (el, attr) => {  try {    return window.getComputedStyle      ? window.getComputedStyle(el)[attr]      : el.currentStyle[attr];  } catch (e) {}  return "";};class Cursor {  constructor() {    this.pos = { curr: null, prev: null };    this.pt = [];    this.create();    this.init();    this.render();  }  move(left, top) {    this.cursor.style["left"] = `${left}px`;    this.cursor.style["top"] = `${top}px`;  }  create() {    if (!this.cursor) {      this.cursor = document.createElement("div");      this.cursor.id = "cursor";      this.cursor.classList.add("hidden");      document.body.append(this.cursor);    }    var el = document.getElementsByTagName("*");    for (let i = 0; i < el.length; i++)      if (getStyle(el[i], "cursor") == "pointer") this.pt.push(el[i].outerHTML);    document.body.appendChild((this.scr = document.createElement("style")));    // 这里改变鼠标指针的颜色 由svg生成    this.scr.innerHTML = `* {cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' width='8px' height='8px'><circle cx='4' cy='4' r='4' opacity='1.0' fill='rgb(57,197,187)'/></svg>") 4 4, auto}`;  }  refresh() {    this.scr.remove();    this.cursor.classList.remove("hover");    this.cursor.classList.remove("active");    this.pos = { curr: null, prev: null };    this.pt = [];    this.create();    this.init();    this.render();  }  init() {    document.onmouseover = (e) =>      this.pt.includes(e.target.outerHTML) &&      this.cursor.classList.add("hover");    document.onmouseout = (e) =>      this.pt.includes(e.target.outerHTML) &&      this.cursor.classList.remove("hover");    document.onmousemove = (e) => {      this.pos.curr == null && this.move(e.clientX - 8, e.clientY - 8);      this.pos.curr = { x: e.clientX - 8, y: e.clientY - 8 };      this.cursor.classList.remove("hidden");    };    document.onmouseenter = (e) => this.cursor.classList.remove("hidden");    document.onmouseleave = (e) => this.cursor.classList.add("hidden");    document.onmousedown = (e) => this.cursor.classList.add("active");    document.onmouseup = (e) => this.cursor.classList.remove("active");  }  render() {    if (this.pos.prev) {      this.pos.prev.x = Math.lerp(this.pos.prev.x, this.pos.curr.x, 0.15);      this.pos.prev.y = Math.lerp(this.pos.prev.y, this.pos.curr.y, 0.15);      this.move(this.pos.prev.x, this.pos.prev.y);    } else {      this.pos.prev = this.pos.curr;    }    requestAnimationFrame(() => this.render());  }}(() => {  CURSOR = new Cursor();  // 需要重新获取列表时，使用 CURSOR.refresh()})();]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title></title>
       <link href="/js/light.js"/>
       <url>/js/light.js</url>
       
@@ -2487,11 +2501,11 @@
     
     
     <entry>
-      <title>友链</title>
-      <link href="/link/index.html"/>
-      <url>/link/index.html</url>
+      <title></title>
+      <link href="/js/cursor.js"/>
+      <url>/js/cursor.js</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[var CURSOR;Math.lerp = (a, b, n) => (1 - n) * a + n * b;const getStyle = (el, attr) => {  try {    return window.getComputedStyle      ? window.getComputedStyle(el)[attr]      : el.currentStyle[attr];  } catch (e) {}  return "";};class Cursor {  constructor() {    this.pos = { curr: null, prev: null };    this.pt = [];    this.create();    this.init();    this.render();  }  move(left, top) {    this.cursor.style["left"] = `${left}px`;    this.cursor.style["top"] = `${top}px`;  }  create() {    if (!this.cursor) {      this.cursor = document.createElement("div");      this.cursor.id = "cursor";      this.cursor.classList.add("hidden");      document.body.append(this.cursor);    }    var el = document.getElementsByTagName("*");    for (let i = 0; i < el.length; i++)      if (getStyle(el[i], "cursor") == "pointer") this.pt.push(el[i].outerHTML);    document.body.appendChild((this.scr = document.createElement("style")));    // 这里改变鼠标指针的颜色 由svg生成    this.scr.innerHTML = `* {cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' width='8px' height='8px'><circle cx='4' cy='4' r='4' opacity='1.0' fill='rgb(57,197,187)'/></svg>") 4 4, auto}`;  }  refresh() {    this.scr.remove();    this.cursor.classList.remove("hover");    this.cursor.classList.remove("active");    this.pos = { curr: null, prev: null };    this.pt = [];    this.create();    this.init();    this.render();  }  init() {    document.onmouseover = (e) =>      this.pt.includes(e.target.outerHTML) &&      this.cursor.classList.add("hover");    document.onmouseout = (e) =>      this.pt.includes(e.target.outerHTML) &&      this.cursor.classList.remove("hover");    document.onmousemove = (e) => {      this.pos.curr == null && this.move(e.clientX - 8, e.clientY - 8);      this.pos.curr = { x: e.clientX - 8, y: e.clientY - 8 };      this.cursor.classList.remove("hidden");    };    document.onmouseenter = (e) => this.cursor.classList.remove("hidden");    document.onmouseleave = (e) => this.cursor.classList.add("hidden");    document.onmousedown = (e) => this.cursor.classList.add("active");    document.onmouseup = (e) => this.cursor.classList.remove("active");  }  render() {    if (this.pos.prev) {      this.pos.prev.x = Math.lerp(this.pos.prev.x, this.pos.curr.x, 0.15);      this.pos.prev.y = Math.lerp(this.pos.prev.y, this.pos.curr.y, 0.15);      this.move(this.pos.prev.x, this.pos.prev.y);    } else {      this.pos.prev = this.pos.curr;    }    requestAnimationFrame(() => this.render());  }}(() => {  CURSOR = new Cursor();  // 需要重新获取列表时，使用 CURSOR.refresh()})();]]></content>
       
     </entry>
     
@@ -2512,6 +2526,17 @@
       <title>电影</title>
       <link href="/movies/index.html"/>
       <url>/movies/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>友链</title>
+      <link href="/link/index.html"/>
+      <url>/link/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
